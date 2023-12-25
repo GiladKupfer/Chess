@@ -10,7 +10,7 @@ class Piece
 protected:
 	Coord _coord;
 	int _color;
-	Piece(Coord coord, int color, int type);
+	Piece(Coord coord, int color);
 	std::tuple<int, int> calcDelta(Coord coord1, Coord coord2);
 	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
 	virtual bool isDstInPath(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;

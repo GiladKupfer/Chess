@@ -1,11 +1,10 @@
 #include "Piece.h"
 #include <math.h>
 
-Piece::Piece(Coord coord, int color, int type)
+Piece::Piece(Coord coord, int color)
 {
     this->_coord = coord; // set the coord
     this->_color = color; // set the color
-    this->_type = type; // set the type
 }
 std::tuple<int, int> Piece::calcDelta(Coord coord1, Coord coord2)
 {
