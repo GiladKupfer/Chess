@@ -22,8 +22,3 @@ int Piece::getColor() const
 {
     return this->_color; // return the color
 }
-
-int Piece::getType() const
-{
-    return this->_type; // return the type
-}
