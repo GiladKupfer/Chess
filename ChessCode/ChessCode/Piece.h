@@ -13,6 +13,7 @@ class Piece
 protected:
 	Coord _coord;
 	int _color;
+	char _sign;
 	
 	std::tuple<int, int> calcDelta(Coord coord1, Coord coord2);
 	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
@@ -24,5 +25,6 @@ public:
 	virtual char checkMove(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
 	Coord getCoord() const;
 	int getColor() const;
+	virtual char getSign() const = 0;
 };
 
