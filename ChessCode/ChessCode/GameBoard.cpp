@@ -1,33 +1,7 @@
 #include "GameBoard.h"
-#include <exception>
 #include "King.h"
-#include "Bishop.h"
-#include "Knight.h"
-#include "Pawn.h"
-#include "Queen.h"
 #include "Rook.h"
 #include <typeinfo>
-
-enum PieceType
-{
-	// Black Pieces
-	BlackRook = 'r',
-	BlackKnight = 'n',
-	BlackBishop = 'b',
-	BlackKing = 'k',
-	BlackQueen = 'q',
-	BlackPawn = 'p',
-
-	// White Pieces
-	WhiteRook = 'R',
-	WhiteKnight = 'N',
-	WhiteBishop = 'B',
-	WhiteKing = 'K',
-	WhiteQueen = 'Q',
-	WhitePawn = 'P',
-
-	EmptySquare = '#',
-};
 
 
 std::string GameBoard::getStartingPieceLayout()
@@ -59,7 +33,7 @@ std::string GameBoard::getCurrentPieceLayout()
 
 void GameBoard::init()
 {
-    this->_turn = WHITE_PLAYER_TURN; // set the default turn to white
+    this->_turn = WHITE_PIECE; // set the default turn to white
 	for (int Row = 0; Row < BOARD_ROWS; Row++)
 	{
 		for (int Col = 0; Col < BOARD_COLS; Col++)
@@ -97,7 +71,7 @@ char GameBoard::execMove(Coord src, Coord dst)
 	}	
 
 	// check the move (6)
-	char moveResult = board[src.Row][src.Col]->checkMove(dst, board);
+	MoveResult moveResult = board[src.Row][src.Col]->checkMove(dst, board);
 	if (moveResult == IllegalPieceMove)
 	{
 		return moveResult;
@@ -105,7 +79,7 @@ char GameBoard::execMove(Coord src, Coord dst)
 
 
 	// check check (1 / 4)
-	char checkRes = checkCheck(src, dst); // get the code the func returns
+	MoveResult checkRes = checkCheck(src, dst); // get the code the func returns
 	if (checkRes == SelfCheck || checkRes == LegalCheck) // if the function found a self check (illegal) or a normal check (legal)
 	{
 		return checkRes; // return the code
@@ -113,6 +87,7 @@ char GameBoard::execMove(Coord src, Coord dst)
 
 	// move the piece in our board and return valid move
 	move(this->board, src, dst);
+	switchTurn();
 	return Legal; // all the checks have been made so only code is 0
 }
 
@@ -122,28 +97,28 @@ Piece* GameBoard::createPiece(char sign, Coord coord)
     {
         case BlackRook: // it is a black rook
             return new Rook(coord, BLACK_PIECE);
-        case BlackKnight: // it is a black knight 
-            return new Knight(coord, BLACK_PIECE);
-        case BlackBishop: // it is a black bishop
-            return new Bishop(coord, BLACK_PIECE);
+  //      case BlackKnight: // it is a black knight 
+  //          return new Knight(coord, BLACK_PIECE);
+  //      case BlackBishop: // it is a black bishop
+  //          return new Bishop(coord, BLACK_PIECE);
         case BlackKing: // it is a black king 
             return new King(coord, BLACK_PIECE);
-        case BlackQueen: // it is a black queen
-            return new Queen(coord, BLACK_PIECE);
-        case BlackPawn: // it is a black pawn
-            return new Pawn(coord, BLACK_PIECE);
+  //      case BlackQueen: // it is a black queen
+  //          return new Queen(coord, BLACK_PIECE);
+  //      case BlackPawn: // it is a black pawn
+  //          return new Pawn(coord, BLACK_PIECE);
 		case WhiteRook: // it is a White rook
 			return new Rook(coord, WHITE_PIECE);
-		case WhiteKnight: // it is a White knight 
-			return new Knight(coord, WHITE_PIECE);
-		case WhiteBishop: // it is a White bishop
-			return new Bishop(coord, WHITE_PIECE);
+		//case WhiteKnight: // it is a White knight 
+		//	return new Knight(coord, WHITE_PIECE);
+		//case WhiteBishop: // it is a White bishop
+		//	return new Bishop(coord, WHITE_PIECE);
 		case WhiteKing: // it is a White king 
 			return new King(coord, WHITE_PIECE);
-		case WhiteQueen: // it is a White queen
-			return new Queen(coord, WHITE_PIECE);
-		case WhitePawn: // it is a White pawn
-			return new Pawn(coord, WHITE_PIECE);
+		//case WhiteQueen: // it is a White queen
+		//	return new Queen(coord, WHITE_PIECE);
+		//case WhitePawn: // it is a White pawn
+		//	return new Pawn(coord, WHITE_PIECE);
         case EmptySquare: // it is an empty square
             return NULL;
 		default: // something went wrong
@@ -154,7 +129,7 @@ Piece* GameBoard::createPiece(char sign, Coord coord)
 bool GameBoard::isExist(Coord coord)
 {
     // check if the coord exists in the board
-    return this->board[coord.Row][coord.Col] == NULL; 
+    return this->board[coord.Row][coord.Col] != NULL; 
 }
 
 bool GameBoard::isPieceTurn(Coord coord)
@@ -167,15 +142,15 @@ bool GameBoard::isPieceTurn(Coord coord)
 	throw std::exception("recieved null");
 }
 
-int GameBoard::alternativeTurn(int currentTurn)
+Color GameBoard::alternativeTurn(Color currentTurn)
 {
-	if (currentTurn == WHITE_PLAYER_TURN) // if the current turn is white
+	if (currentTurn == WHITE_PIECE) // if the current turn is white
 	{
-		return BLACK_PLAYER_TURN; // switch to black
+		return BLACK_PIECE; // switch to black
 	}
 
 	// we got here meaning the current turn is black
-	return WHITE_PLAYER_TURN; // switch to white
+	return WHITE_PIECE; // switch to white
 }
 
 void GameBoard::switchTurn()
@@ -198,7 +173,7 @@ GameBoard GameBoard::getCopyOfBoard()
 	return newBoard; // return the new game board
 }
 
-char GameBoard::checkCheck(Coord src, Coord dst)
+MoveResult GameBoard::checkCheck(Coord src, Coord dst)
 {
 	GameBoard tempBoard = getCopyOfBoard(); // get a copy of the board
 	move(tempBoard.board, src, dst); // simulate the move on the board
@@ -217,7 +192,7 @@ char GameBoard::checkCheck(Coord src, Coord dst)
 }
 
 
-Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], int wantedColor)
+Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], Color wantedColor)
 {
 	// iterate through the board
 	for (int row = 0; row < BOARD_ROWS; row++)
@@ -225,12 +200,17 @@ Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], int wantedColor)
 		for (int col = 0; col < BOARD_COLS; col++)
 		{
 			Piece* currentPiece = board[row][col]; // get the current piece
-			if (typeid(currentPiece) == typeid(King)) // check if its a king
+			if(currentPiece == NULL)
 			{
-				Coord currentCoord = currentPiece->getCoord();
-				if (isPieceTurn(currentCoord)) // if its the player's king
+				continue;
+			}
+			if (currentPiece->getSign() == WhiteKing ||
+				currentPiece->getSign() == BlackKing
+				) // check if its a king
+			{
+				if (currentPiece->getColor() == wantedColor ) // if its the player's king
 				{
-					return currentCoord; // return the coord of the piece
+					return currentPiece->getCoord();; // return the coord of the piece
 				}
 				else
 				{
@@ -255,6 +235,10 @@ bool GameBoard::isPlayerKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 			try
 			{
 				Piece* currentPiece = board[row][col]; // get the current piece
+				if (currentPiece == NULL)
+				{
+					continue;
+				}
 				if (!isPieceTurn(currentPiece->getCoord())) // if the current piece is an enemy piece
 				{
 					if (currentPiece->checkMove(wantedKingCoord, board) == Legal) // check if the piece can eat the king
@@ -274,7 +258,7 @@ bool GameBoard::isPlayerKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 
 bool GameBoard::isOpponentKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 {
-	Coord wantedKingCoord = getKing(board, this->_turn); // get the coord of the king
+	Coord wantedKingCoord = getKing(board, alternativeTurn(this->_turn)); // get the coord of the king
 
 	// iterate through the board
 	for (int row = 0; row < BOARD_ROWS; row++)
@@ -284,7 +268,11 @@ bool GameBoard::isOpponentKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 			try
 			{
 				Piece* currentPiece = board[row][col]; // get the current piece
-				if (!isPieceTurn(currentPiece->getCoord())) // if the current piece is an enemy piece
+				if (currentPiece == NULL)
+				{
+					continue;
+				}
+				if (isPieceTurn(currentPiece->getCoord())) // if the current piece is an enemy piece
 				{
 					if (currentPiece->checkMove(wantedKingCoord, board) == Legal) // check if the piece can eat the king
 					{
