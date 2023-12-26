@@ -29,22 +29,6 @@ enum PieceType
 	EmptySquare = '#',
 };
 
-enum MoveResult
-{
-	// Legal moves
-	Legal = '0',
-	LegalCheck = '1',
-
-	// Illegal moves
-	NoPieceOnSourceSquare = '2',
-	OwnPieceOnTargetSquare = '3',
-	SelfCheck = '4',
-	InvalidSquareIndexes = '5',
-	IllegalPieceMove = '6',
-	SourceAndTargetSquaresEqual = '7',
-};
-
-
 
 std::string GameBoard::getStartingPieceLayout()
 {
@@ -95,32 +79,32 @@ void GameBoard::init()
 char GameBoard::execMove(Coord src, Coord dst)
 {
 	// invalid moves
-	if (!src.isValid() || !dst.isValid()) // illegal coords
+	if (!src.isValid() || !dst.isValid()) // illegal coords (5)
 	{
 		return InvalidSquareIndexes;
 	}
-	if (!isExist(src) || !isPieceTurn(src)) // soucre piece non existent or not their turn
+	if (!isExist(src) || !isPieceTurn(src)) // soucre piece non existent or not their turn (2)
 	{
 		return NoPieceOnSourceSquare;
 	}
-	if (src.isEqual(dst)) // source coord is dst coord
+	if (src.isEqual(dst)) // source coord is dst coord (7)
 	{
-		return SourceAndTargetSquaresEqual;
+		return SourceAndTargetSquaresEqual; 
 	}
-	if (isExist(dst) && isPieceTurn(dst)) // dst coord is own player piece
+	if (isExist(dst) && isPieceTurn(dst)) // dst coord is own player piece (3)
 	{
 		return OwnPieceOnTargetSquare;
 	}	
 
-	// check the move
+	// check the move (6)
 	char moveResult = board[src.Row][src.Col]->checkMove(dst, board);
-	if (moveResult != Legal)
+	if (moveResult == IllegalPieceMove)
 	{
 		return moveResult;
 	}
 
 
-	// check check
+	// check check (1 / 4)
 	char checkRes = checkCheck(src, dst); // get the code the func returns
 	if (checkRes == SelfCheck || checkRes == LegalCheck) // if the function found a self check (illegal) or a normal check (legal)
 	{
@@ -129,7 +113,7 @@ char GameBoard::execMove(Coord src, Coord dst)
 
 	// move the piece in our board and return valid move
 	move(this->board, src, dst);
-	return Legal;
+	return Legal; // all the checks have been made so only code is 0
 }
 
 Piece* GameBoard::createPiece(char sign, Coord coord)
