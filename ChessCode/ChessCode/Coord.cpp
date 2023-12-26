@@ -10,6 +10,10 @@ Coord::Coord(int row, int col)
 	this->Col = col; // set col
 }
 
+Coord::Coord(const Coord &other) : Row(other.Row), Col(other.Col)
+{
+}
+
 bool Coord::isValid()
 {
 	// check if either one of the coord values is valid (negative or over the limit)
