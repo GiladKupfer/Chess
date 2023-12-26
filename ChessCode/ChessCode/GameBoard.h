@@ -3,7 +3,7 @@
 #include <string>
 
 
-#define STARTING_PIECE_LAYOUT "ngololkante"
+#define STARTING_PIECE_LAYOUT "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR" // printing blacks then whites
 
 #define BOARD_ROWS 8
 #define BOARD_COLS BOARD_ROWS
@@ -16,9 +16,10 @@ class GameBoard
 {
 public:
 	Piece* board[BOARD_ROWS][BOARD_COLS];
-	
+	std::string getStartingPieceLayout();
+	std::string getCurrentPieceLayout();
 	void init();
-	char execMove(Coord src, Coord dest);
+	char execMove(Coord src, Coord dst);
 
 private:
 	int _turn;
@@ -27,11 +28,14 @@ private:
 	Piece* createPiece(char sign, Coord coord);
 	bool isExist(Coord coord);
 	bool isPieceTurn(Coord coord);
+	static int alternativeTurn(int currentTurn);
 	void switchTurn();
-	char checkCheck();
-	bool isPlayerKingInDanger();
-	bool isOpponentKingInDanger();
-	void move(Coord src, Coord dst);
+	GameBoard getCopyOfBoard();
+	char checkCheck(Coord src, Coord dst);
+	Coord getKing(Piece* board[BOARD_ROWS][BOARD_COLS], int wantedColor);
+	bool isPlayerKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS]);
+	bool isOpponentKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS]);
+	static void move(Piece* board[BOARD_ROWS][BOARD_COLS], Coord src, Coord dst);
 
 };
 
