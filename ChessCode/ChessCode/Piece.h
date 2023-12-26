@@ -17,7 +17,7 @@ protected:
 	
 	std::tuple<int, int> calcDelta(Coord coord1, Coord coord2);
 	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
-	virtual bool isDstInPath(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
+	virtual bool isDstInPath(Coord dst) = 0;
 	static Coord calcDst(Coord src, int numOfSteps, char direction);
 
 public:
