@@ -25,6 +25,6 @@ public:
 	virtual char checkMove(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
 	Coord getCoord() const;
 	int getColor() const;
-	virtual char getSign() const = 0;
+	char getSign() const;
 };
 

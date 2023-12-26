@@ -65,3 +65,8 @@ int Piece::getColor() const
 {
     return this->_color; // return the color
 }
+
+char Piece::getSign() const
+{
+    return this->_sign;
+}
