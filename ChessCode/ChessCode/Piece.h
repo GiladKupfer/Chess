@@ -5,6 +5,9 @@
 #define BOARD_ROWS 8
 #define BOARD_COLS BOARD_ROWS
 
+#define WHITE_PIECE 0
+#define BLACK_PIECE 1
+
 class Piece
 {
 protected:
