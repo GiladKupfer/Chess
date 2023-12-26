@@ -4,6 +4,12 @@
 #define MIN_COORD_VALUE 0
 #define MAX_COORD_VALUE 8
 
+Coord::Coord()
+{
+	this->Row = -1; // set row
+	this->Col = -1; // set col
+}
+
 Coord::Coord(int row, int col)
 {
 	this->Row = row; // set row
