@@ -1,7 +1,6 @@
 #include "GameBoard.h"
 #include "King.h"
 #include "Rook.h"
-#include <typeinfo>
 
 
 std::string GameBoard::getStartingPieceLayout()
