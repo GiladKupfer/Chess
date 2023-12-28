@@ -4,7 +4,7 @@
 
 
 //#define STARTING_PIECE_LAYOUT "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR" // printing blacks then whites
-#define STARTING_PIECE_LAYOUT "R#####r#############K##################################k########" // printing blacks then whites
+#define STARTING_PIECE_LAYOUT "####################K##################################k########" // printing blacks then whites
 
 #define BOARD_ROWS 8
 #define BOARD_COLS BOARD_ROWS

@@ -35,7 +35,7 @@ void GameBoard::init()
     this->_turn = WHITE_PIECE; // set the default turn to white
 	for (int Row = 0; Row < BOARD_ROWS; Row++)
 	{
-		for (int Col = 0; Col < BOARD_COLS; Col++)
+		for (int Col = 0; Col < BOARD_ROWS; Col++)
 		{
 			// Calculate the index in the string based on Row and Col
 			int stringIndex = Row * BOARD_COLS + Col;

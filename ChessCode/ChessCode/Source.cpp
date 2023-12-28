@@ -21,8 +21,8 @@ using std::endl;
 using std::string;
 
 #define COORD_CHAR_COUNT 2
-#define FIRST_NOTATION_EXPECTED 'A'
-#define LAST_NOTATION_EXPECTEED 'H'
+#define FIRST_NOTATION_EXPECTED 'a'
+#define LAST_NOTATION_EXPECTEED 'h'
 
 std::tuple<Coord, Coord> parseInput(std::string input);
 Coord parseToCoord(std::string move);
@@ -60,9 +60,12 @@ void main()
 
 	char msgToGraphics[1024];
 	// msgToGraphics should contain the board string accord the protocol
-	// YOUR CODE
 
-	strcpy_s(msgToGraphics, "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR1");
+	// create a game board
+	GameBoard board;
+	board.init();
+
+	strcpy_s(msgToGraphics, "####################K##################################k########0");
 
 	p.sendMessageToGraphics(msgToGraphics);   // send the board string
 
@@ -73,15 +76,18 @@ void main()
 	{
 		// should handle the string the sent from graphics
 		// according the protocol. Ex: e2e4           (move e2 to e4)
+		
+		// extract the source and dewst coords from the frontend 
+		auto tupleRes = parseInput(msgFromGraphics);
+		Coord coord1;
+		Coord coord2;
+		std::tie(coord1, coord2) = tupleRes;
 
-		// YOUR CODE
-		strcpy_s(msgToGraphics, "YOUR CODE"); // msgToGraphics should contain the result of the operation
+		char result[1024];
+		result[0] = board.execMove(coord1, coord2); // get the result of the move
+		result[1] = '\0';
 
-		/******* JUST FOR EREZ DEBUGGING ******/
-		int r = rand() % 10; // just for debugging......
-		msgToGraphics[0] = (char)(1 + '0');
-		msgToGraphics[1] = 0;
-		/******* JUST FOR EREZ DEBUGGING ******/
+		strcpy_s(msgToGraphics, result); // msgToGraphics should contain the result of the operation
 
 
 		// return result to graphics		
@@ -110,8 +116,9 @@ Coord parseToCoord(std::string move)
 	if (move.length() > COORD_CHAR_COUNT) // got unexpected input
 	{
 		throw std::exception("My brother you gave me a string in MD5 (got unexpected input)");
-	}
-	return Coord(NotationToNum(move[0]), move[1] - '0'); // translate the notation to a number and translate the number string to a notmal string
+	} 
+	// translate the notation to a number and translate the number string to a notmal string
+	return Coord(move[1] - '0' - 1, NotationToNum(move[0])); // -1 to not get memory access violation
 
 }
 
@@ -119,7 +126,7 @@ int NotationToNum(char notation)
 {
 	if (notation < FIRST_NOTATION_EXPECTED || notation > LAST_NOTATION_EXPECTEED) // got unexpected input
 	{
-		throw std::exception("BROTHER PLAYING CHECKERS (wrong notation input)");
+		throw std::exception("BROTHER IS PLAYING CHECKERS (wrong notation input)");
 	}
 	return notation - FIRST_NOTATION_EXPECTED; // use the power of math to return the notation as a number
 }

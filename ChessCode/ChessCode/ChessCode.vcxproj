@@ -140,7 +140,6 @@
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="King.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Rook.cpp" />
     <ClCompile Include="Source.cpp" />
