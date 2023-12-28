@@ -25,21 +25,21 @@ Coord Piece::calcDst(Coord src, int numOfSteps, Direction direction)
     switch (direction)
     {
     case UP: // the direction is up
-        return Coord(src.Row - numOfSteps, src.Col);
-    case DOWN:// the direction is down
         return Coord(src.Row + numOfSteps, src.Col);
+    case DOWN:// the direction is down
+        return Coord(src.Row - numOfSteps, src.Col);
     case LEFT: // the direction is left
         return Coord(src.Row, src.Col - numOfSteps);
     case RIGHT: // the direction is right
         return Coord(src.Row, src.Col + numOfSteps);
     case UP_RIGHT: // the direction is up right
-        return Coord(src.Row - numOfSteps, src.Col + numOfSteps);
-    case UP_LEFT: // the direction is up left
-        return Coord(src.Row - numOfSteps, src.Col - numOfSteps);
-    case DOWN_RIGHT: // the direction is down right
         return Coord(src.Row + numOfSteps, src.Col + numOfSteps);
-    case DOWN_LEFT: // the direction is down left
+    case UP_LEFT: // the direction is up left
         return Coord(src.Row + numOfSteps, src.Col - numOfSteps);
+    case DOWN_RIGHT: // the direction is down right
+        return Coord(src.Row - numOfSteps, src.Col + numOfSteps);
+    case DOWN_LEFT: // the direction is down left
+        return Coord(src.Row - numOfSteps, src.Col - numOfSteps);
     default: // got unexpected input
         throw std::exception("AINT NO WAY BOY YOU GAVE ME DIRECTIONS TO NARNIA (got unexpected direction)"); // if the direction is invalid throw an exception +""; // if the direction is invalid throw an exception
     }
@@ -98,6 +98,11 @@ Direction Piece::getDirection(Coord src, Coord dst)
         return DOWN_LEFT;
     }
     
+}
+
+void Piece::setCoord(Coord coord)
+{
+    this->_coord = coord; // set the coord
 }
 
 Coord Piece::getCoord() const

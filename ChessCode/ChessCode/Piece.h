@@ -83,6 +83,7 @@ protected:
 public:
 	Piece(Coord coord, Color color);
 	virtual MoveResult checkMove(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) = 0;
+	void setCoord(Coord coord);
 	Coord getCoord() const;
 	Color getColor() const;
 	Sign getSign() const;
