@@ -61,16 +61,19 @@ void main()
 	char msgToGraphics[1024];
 	// msgToGraphics should contain the board string accord the protocol
 
+	// 1024 because they made msgToGraphics 1024 for some reason
+	char frontendInitialInput[1024] = "r###k#######################################################K##R1";
+
 	// create a game board
 	GameBoard board;
-	board.init();
+	board.init(frontendInitialInput);
 
-	strcpy_s(msgToGraphics, "####################K##################################k########0");
+	strcpy_s(msgToGraphics, frontendInitialInput);
 
 	p.sendMessageToGraphics(msgToGraphics);   // send the board string
 
 	// get message from graphics
-	string msgFromGraphics = p.getMessageFromGraphics();
+  	string msgFromGraphics = p.getMessageFromGraphics();
 
 	while (msgFromGraphics != "quit")
 	{

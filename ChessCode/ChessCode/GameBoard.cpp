@@ -3,10 +3,6 @@
 #include "Rook.h"
 
 
-std::string GameBoard::getStartingPieceLayout()
-{
-	return this->_startingPieceLayout;
-}
 
 std::string GameBoard::getCurrentPieceLayout()
 {
@@ -16,13 +12,13 @@ std::string GameBoard::getCurrentPieceLayout()
 		for (int col = 0; col < BOARD_COLS; col++)
 		{
 			Piece* currentPiece = board[row][col]; // get the current piece
-			try
-			{
-				retPieceLayout += currentPiece->getSign(); // add the sign we got from the func to the string
-			}
-			catch (...) // getSign() failed, meaning its an empty square
+			if (currentPiece == NULL)
 			{
 				retPieceLayout += EmptySquare;
+			}
+			else
+			{
+				retPieceLayout += currentPiece->getSign(); // add the sign we got from the func to the string
 			}
 		}
 	}
@@ -30,23 +26,33 @@ std::string GameBoard::getCurrentPieceLayout()
 	return retPieceLayout;
 }
 
-void GameBoard::init()
+void GameBoard::init(std::string boardInput)
 {
-    this->_turn = WHITE_PIECE; // set the default turn to white
-	for (int Row = 0; Row < BOARD_ROWS; Row++)
+	
+	// extracting the turn from the string
+	// (Color)to_int('1') ---> black
+	this->_turn = (Color)std::stoi(boardInput.substr(TURN_INDEX));;
+
+	// init index
+	int stringIndex = 0;
+	for (int Row = BOARD_ROWS -1; Row >= 0; Row--)
 	{
 		for (int Col = 0; Col < BOARD_ROWS; Col++)
 		{
-			// Calculate the index in the string based on Row and Col
-			int stringIndex = Row * BOARD_COLS + Col;
-
+			
             // get the piece char based on the starting piece layout
-			char pieceChar = _startingPieceLayout[stringIndex];
+			char pieceChar = boardInput[stringIndex];
 
             // create a new Piece based on the piece char
 			this->board[Row][Col] = createPiece(pieceChar,  Coord(Row, Col));
+
+			// Keep the string track going
+			stringIndex++;
 		}
+
 	};
+
+	std::string test = getCurrentPieceLayout();
 }
 
 char GameBoard::execMove(Coord src, Coord dst)
@@ -79,15 +85,31 @@ char GameBoard::execMove(Coord src, Coord dst)
 
 	// check check (1 / 4)
 	MoveResult checkRes = checkCheck(src, dst); // get the code the func returns
-	if (checkRes == SelfCheck || checkRes == LegalCheck) // if the function found a self check (illegal) or a normal check (legal)
+	if (checkRes == SelfCheck) // if the function found a self check (illegal)
 	{
+		return checkRes; // return the code
+	}
+	else if (checkRes == LegalCheck) //  if the function found a normal check (legal)
+	{
+		move(src, dst); // move
+		switchTurn(); // switch the turn
 		return checkRes; // return the code
 	}
 
 	// move the piece in our board and return valid move
-	move(this->board, src, dst);
+	move(src, dst);
 	switchTurn();
 	return Legal; // all the checks have been made so only code is 0
+}
+
+Color GameBoard::getTurn()
+{
+	return this->_turn; // return the turn
+}
+
+void GameBoard::setTurn(Color newColor)
+{
+	this->_turn = newColor; // set the turn to the new turn
 }
 
 Piece* GameBoard::createPiece(char sign, Coord coord)
@@ -161,28 +183,39 @@ void GameBoard::switchTurn()
 GameBoard GameBoard::getCopyOfBoard()
 {
 	GameBoard newBoard; // create a new game board
+
 	for (int row = 0; row < BOARD_ROWS; row++)
 	{
 		for (int col = 0; col < BOARD_COLS; col++)
 		{
-			newBoard.board[row][col] = this->board[row][col]; // copy the value from this board to the new board
+			Piece* cuurentPiece = this->board[row][col];
+			if (cuurentPiece != NULL)
+			{
+				newBoard.board[row][col] = createPiece(cuurentPiece->getSign(), cuurentPiece->getCoord()); // copy the value from this board to the new board
+			}
+			else
+			{
+				newBoard.board[row][col] = NULL;
+			}
+
 		}
 	}
+	newBoard.setTurn(this->_turn); // set the turn of the new board
 
 	return newBoard; // return the new game board
 }
 
 MoveResult GameBoard::checkCheck(Coord src, Coord dst)
 {
-	GameBoard tempBoard = getCopyOfBoard(); // get a copy of the board
-	move(tempBoard.board, src, dst); // simulate the move on the board
+	GameBoard simulatedBoard = getCopyOfBoard(); // get a copy of the board
+	simulatedBoard.move(src, dst); // simulate the move on the board
 
 	// now that we simulated the move
-	if (isPlayerKingInDanger(tempBoard.board)) // check if the player king is in danger
+	if (simulatedBoard.isPlayerKingInDanger()) // check if the player king is in danger
 	{
 		return SelfCheck; // return illegal move, self check
 	}
-	if (isOpponentKingInDanger(tempBoard.board)) // check if the opponent king is in danger
+	if (simulatedBoard.isOpponentKingInDanger()) // check if the opponent king is in danger
 	{
 		return LegalCheck; // NICE! the player put the enemy king in check
 	}
@@ -191,7 +224,7 @@ MoveResult GameBoard::checkCheck(Coord src, Coord dst)
 }
 
 
-Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], Color wantedColor)
+Coord GameBoard::getKing(Color wantedColor)
 {
 	// iterate through the board
 	for (int row = 0; row < BOARD_ROWS; row++)
@@ -209,7 +242,7 @@ Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], Color wantedColor
 			{
 				if (currentPiece->getColor() == wantedColor ) // if its the player's king
 				{
-					return currentPiece->getCoord();; // return the coord of the piece
+					return currentPiece->getCoord(); // return the coord of the piece
 				}
 				else
 				{
@@ -222,9 +255,9 @@ Coord GameBoard::getKing(Piece* board[BOARD_ROWS][BOARD_COLS], Color wantedColor
 }
 
 
-bool GameBoard::isPlayerKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
+bool GameBoard::isPlayerKingInDanger()
 {
-	Coord wantedKingCoord = getKing(board, this->_turn); // get the coord of the king
+	Coord wantedKingCoord = getKing(this->_turn); // get the coord of the king
 
 	// iterate through the board
 	for (int row = 0; row < BOARD_ROWS; row++)
@@ -255,9 +288,9 @@ bool GameBoard::isPlayerKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 	return false; // we got here meaning our king is safe therefore the player king is NOT in danger
 }
 
-bool GameBoard::isOpponentKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
+bool GameBoard::isOpponentKingInDanger()
 {
-	Coord wantedKingCoord = getKing(board, alternativeTurn(this->_turn)); // get the coord of the king
+	Coord wantedKingCoord = getKing(alternativeTurn(this->_turn)); // get the coord of the king
 
 	// iterate through the board
 	for (int row = 0; row < BOARD_ROWS; row++)
@@ -288,9 +321,10 @@ bool GameBoard::isOpponentKingInDanger(Piece* board[BOARD_ROWS][BOARD_COLS])
 	return false; // we got here meaning our king is safe therefore the player king is NOT in danger
 }
 
-void GameBoard::move(Piece* board[BOARD_ROWS][BOARD_COLS], Coord src, Coord dst)
+void GameBoard::move(Coord src, Coord dst)
 {
-	Piece* originalPiece = board[src.Row][src.Col]; // save the original piece
-	board[src.Row][src.Col] = NULL; // set the 'old' coord to null
-	board[dst.Row][dst.Col] = originalPiece; // set the 'new' coord to the new piece (essentially moving it)
+	Piece* originalPiece = this->board[src.Row][src.Col]; // save the original piece
+	this->board[src.Row][src.Col] = NULL; // set the 'old' coord to null
+	this->board[dst.Row][dst.Col] = originalPiece; // set the 'new' coord to the new piece (essentially moving it)
+	originalPiece->setCoord(dst); // update the coord of the piece
 }
