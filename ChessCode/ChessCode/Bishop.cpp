@@ -50,13 +50,8 @@ bool Bishop::arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction dire
 
 std::tuple<bool, Direction> Bishop::isDstInPath(Coord dst)
 {
-	auto tupleRes = calcUnsignedDelta(this->_coord, dst); // store the returned tuple
-	// extract the values
-	int deltaRow;
-	int deltaCol;
-	std::tie(deltaRow, deltaCol) = tupleRes;
 
-	if (deltaRow != deltaCol) // if the deltas match, they are in the diagonals of the bishop
+	if (isDiagonalLine(this->_coord, dst)) // if its a fiagonal line
 	{
 		return std::make_tuple(false, None); // return false and garbage char
 	}

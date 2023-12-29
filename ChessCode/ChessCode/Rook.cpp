@@ -53,9 +53,8 @@ bool Rook::arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction direct
 
 std::tuple<bool, Direction> Rook::isDstInPath(Coord dst)
 {
-	// the movement should be in a direct line,
-	// meaning that either the row (or the col) of the source should be equal to row (or the col) of the dest
-	if (this->_coord.Row != dst.Row && this->_coord.Col != dst.Col)
+	// the movement should be in a direct line
+	if (isStraightLine(this->_coord, dst))
 	{
 		return std::make_tuple(false, None); // return false and garbage char
 	}
