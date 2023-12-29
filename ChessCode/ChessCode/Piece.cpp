@@ -11,10 +11,17 @@ Piece::Piece(Coord coord, Color color)
     this->_color = color; // set the color
 }
 
-std::tuple<int, int> Piece::calcDelta(Coord coord1, Coord coord2)
+std::tuple<int, int> Piece::calcUnsignedDelta(Coord coord1, Coord coord2)
 {
     int deltaRow = abs(coord1.Row - coord2.Row); // calc delta row
     int deltaCol = abs(coord1.Col - coord2.Col); // calc delta col
+    return std::make_tuple(deltaRow, deltaCol); // return a tuple of the two
+}
+
+std::tuple<int, int> Piece::calcSignedDelta(Coord coord1, Coord coord2)
+{
+    int deltaRow = coord1.Row - coord2.Row; // calc delta row
+    int deltaCol = coord1.Col - coord2.Col; // calc delta col
     return std::make_tuple(deltaRow, deltaCol); // return a tuple of the two
 }
 
@@ -47,8 +54,11 @@ Coord Piece::calcDst(Coord src, int numOfSteps, Direction direction)
 
 Direction Piece::getDirection(Coord src, Coord dst)
 {
-    int deltaRow = src.Row - dst.Row; // calc delta row
-    int deltaCol = src.Col - dst.Col; // calc delta col
+    auto tupleRes = calcSignedDelta(src, dst); // store the returned tuple
+    // extract the values
+    int deltaRow;
+    int deltaCol;
+    std::tie(deltaRow, deltaCol) = tupleRes;
 
     if (deltaRow == 0 && deltaCol == 0) // same coord
     {

@@ -74,11 +74,12 @@ protected:
 	Color _color;
 	Sign _sign;
 	
-	std::tuple<int, int> calcDelta(Coord coord1, Coord coord2);
+	std::tuple<int, int> calcUnsignedDelta(Coord coord1, Coord coord2);
+	std::tuple<int, int> calcSignedDelta(Coord coord1, Coord coord2);
 	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction direction, Coord dst) = 0;
 	virtual std::tuple<bool, Direction> isDstInPath(Coord dst) = 0;
 	static Coord calcDst(Coord src, int numOfSteps, Direction direction);
-	static Direction getDirection(Coord src, Coord dst);
+	Direction getDirection(Coord src, Coord dst);
 
 public:
 	Piece(Coord coord, Color color);
