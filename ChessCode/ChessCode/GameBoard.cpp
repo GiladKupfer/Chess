@@ -3,6 +3,7 @@
 #include "Rook.h"
 #include "Bishop.h"
 #include "Queen.h"
+#include "Knight.h"
 
 
 
@@ -120,8 +121,8 @@ Piece* GameBoard::createPiece(char sign, Coord coord)
     {
         case BlackRook: // it is a black rook
             return new Rook(coord, BLACK_PIECE);
-  //      case BlackKnight: // it is a black knight 
-  //          return new Knight(coord, BLACK_PIECE);
+        case BlackKnight: // it is a black knight 
+            return new Knight(coord, BLACK_PIECE);
         case BlackBishop: // it is a black bishop
             return new Bishop(coord, BLACK_PIECE);
         case BlackKing: // it is a black king 
@@ -132,8 +133,8 @@ Piece* GameBoard::createPiece(char sign, Coord coord)
   //          return new Pawn(coord, BLACK_PIECE);
 		case WhiteRook: // it is a White rook
 			return new Rook(coord, WHITE_PIECE);
-		//case WhiteKnight: // it is a White knight 
-		//	return new Knight(coord, WHITE_PIECE);
+		case WhiteKnight: // it is a White knight 
+			return new Knight(coord, WHITE_PIECE);
 		case WhiteBishop: // it is a White bishop
 			return new Bishop(coord, WHITE_PIECE);
 		case WhiteKing: // it is a White king 
