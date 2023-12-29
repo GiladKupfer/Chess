@@ -10,6 +10,7 @@ in order to read and write information from and to the Backend
 #include "GameBoard.h"
 #include "Rook.h"
 #include "King.h"
+#include "Bishop.h"
 #include "Coord.h"
 #include <tuple>
 #include <string>
@@ -62,7 +63,7 @@ void main()
 	// msgToGraphics should contain the board string accord the protocol
 
 	// 1024 because they made msgToGraphics 1024 for some reason
-	char frontendInitialInput[1024] = "r###k#######################################################K##R1";
+	char frontendInitialInput[1024] = "r#b#kb####################################################B#KB#R1";
 
 	// create a game board
 	GameBoard board;
