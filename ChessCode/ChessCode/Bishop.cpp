@@ -8,7 +8,7 @@ Bishop::Bishop(Coord coord, Color color) : Piece(coord, color)
 	}
 	else // its a black piece
 	{
-		this->_sign = BlackKing; // make the sign a black bisop
+		this->_sign = BlackBishop; // make the sign a black bisop
 	}
 }
 
