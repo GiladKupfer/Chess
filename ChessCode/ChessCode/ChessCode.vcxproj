@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bishop.h" />
     <ClInclude Include="Coord.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="King.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="King.cpp" />
