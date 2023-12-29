@@ -74,6 +74,8 @@ protected:
 	Color _color;
 	Sign _sign;
 	
+	bool isStraightLine(Coord coord1, Coord coord2);
+	bool isDiagonalLine(Coord coord1, Coord coord2);
 	std::tuple<int, int> calcUnsignedDelta(Coord coord1, Coord coord2);
 	std::tuple<int, int> calcSignedDelta(Coord coord1, Coord coord2);
 	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction direction, Coord dst) = 0;

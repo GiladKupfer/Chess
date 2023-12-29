@@ -11,6 +11,32 @@ Piece::Piece(Coord coord, Color color)
     this->_color = color; // set the color
 }
 
+bool Piece::isStraightLine(Coord coord1, Coord coord2)
+{
+    // either the row (or the col) of coord1 should be equal to row (or the col) of coord2
+    if (coord1.Row != coord2.Row && coord1.Col != coord2.Col)
+    {
+        return false; // return false
+    }
+    return true; // return true
+}
+
+bool Piece::isDiagonalLine(Coord coord1, Coord coord2)
+{
+    auto tupleRes = calcUnsignedDelta(coord1, coord2); // store the returned tuple
+    // extract the values
+    int deltaRow;
+    int deltaCol;
+    std::tie(deltaRow, deltaCol) = tupleRes;
+
+    if (deltaRow != deltaCol) // if the deltas match, they are a diagonal
+    {
+        return false; // return false
+    }
+    return true; // return true
+}
+
+
 std::tuple<int, int> Piece::calcUnsignedDelta(Coord coord1, Coord coord2)
 {
     int deltaRow = abs(coord1.Row - coord2.Row); // calc delta row
