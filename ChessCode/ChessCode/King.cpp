@@ -3,13 +3,13 @@
 
 King::King(Coord coord, Color color) : Piece(coord, color)
 {
-	if (this->_color == WHITE_PIECE)
+	if (this->_color == WHITE_PIECE) // if its a white piece
 	{
-		this->_sign = WhiteKing;
+		this->_sign = WhiteKing; // make it a white king
 	}
-	else
+	else // its a black piece
 	{
-		this->_sign = BlackKing;
+		this->_sign = BlackKing; // make it a black king
 	}
 }
 
@@ -39,7 +39,7 @@ bool King::arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction direct
 
 std::tuple<bool, Direction> King::isDstInPath(Coord dst)
 {
-	auto delta = calcDelta(this->_coord, dst); // store the returned tuple
+	auto delta = calcUnsignedDelta(this->_coord, dst); // store the returned tuple
 	// extract the values
 	int deltaRow;
 	int deltaCol;
