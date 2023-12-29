@@ -51,7 +51,7 @@ bool Bishop::arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction dire
 std::tuple<bool, Direction> Bishop::isDstInPath(Coord dst)
 {
 
-	if (isDiagonalLine(this->_coord, dst)) // if its a fiagonal line
+	if (!isDiagonalLine(this->_coord, dst)) // if its not a diagonal line
 	{
 		return std::make_tuple(false, None); // return false and garbage char
 	}
