@@ -4,12 +4,11 @@
 class Queen : public Piece
 {
 public:
-	Queen(Coord coord, int color);
-	virtual char checkMove(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) override;
+	Queen(Coord coord, Color color);
+	virtual MoveResult checkMove(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) override;
 
 private:
-	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS]) override;
-	virtual bool isDstInPath(Coord dst, Piece* board[BOARD_ROWS][BOARD_COLS]) override;
-	bool fastValidCheck(Coord dst);
+	virtual bool arePiecesInWay(Piece* board[BOARD_ROWS][BOARD_COLS], Direction direction, Coord dst) override;
+	virtual std::tuple<bool, Direction> isDstInPath(Coord dst) override;
 };
 
