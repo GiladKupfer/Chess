@@ -39,6 +39,8 @@ enum Color
 
 enum MoveResult
 {
+	NoResult = '-',
+
 	// Legal moves
 	Legal = '0',
 	LegalCheck = '1',
