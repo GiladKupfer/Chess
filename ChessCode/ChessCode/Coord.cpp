@@ -2,7 +2,7 @@
 
 
 #define MIN_COORD_VALUE 0
-#define MAX_COORD_VALUE 8
+#define MAX_COORD_VALUE 7
 
 Coord::Coord()
 {
