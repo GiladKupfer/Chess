@@ -15,14 +15,13 @@ class GameBoard
 {
 public:
 	Piece* board[BOARD_ROWS][BOARD_COLS];
-	std::string getCurrentPieceLayout();
 	void init(std::string boardInput);
 	char execMove(Coord src, Coord dst);
 	Color getTurn();
 	void setTurn(Color newColor);
 private:
 	Color _turn;
-
+	bool isCheckMate();
 	Piece* createPiece(char sign, Coord coord);
 	bool isExist(Coord coord);
 	bool isPieceTurn(Coord coord);
@@ -34,7 +33,5 @@ private:
 	bool isPlayerKingInDanger();
 	bool isOpponentKingInDanger();
 	void move(Coord src, Coord dst);
-
-
 };
 

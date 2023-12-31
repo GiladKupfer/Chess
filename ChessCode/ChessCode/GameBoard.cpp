@@ -6,29 +6,8 @@
 #include "Knight.h"
 #include "Pawn.h"
 
+#define MAX_KING_MOVES 8
 
-
-std::string GameBoard::getCurrentPieceLayout()
-{
-	std::string retPieceLayout = "";
-	for (int row = 0; row < BOARD_ROWS; row++)
-	{
-		for (int col = 0; col < BOARD_COLS; col++)
-		{
-			Piece* currentPiece = board[row][col]; // get the current piece
-			if (currentPiece == NULL)
-			{
-				retPieceLayout += EmptySquare;
-			}
-			else
-			{
-				retPieceLayout += currentPiece->getSign(); // add the sign we got from the func to the string
-			}
-		}
-	}
-
-	return retPieceLayout;
-}
 
 void GameBoard::init(std::string boardInput)
 {
@@ -55,8 +34,6 @@ void GameBoard::init(std::string boardInput)
 		}
 
 	};
-
-	std::string test = getCurrentPieceLayout();
 }
 
 char GameBoard::execMove(Coord src, Coord dst)
@@ -96,6 +73,10 @@ char GameBoard::execMove(Coord src, Coord dst)
 	else if (checkRes == LegalCheck) //  if the function found a normal check (legal)
 	{
 		move(src, dst); // move
+		if (isCheckMate())
+		{
+			return CheckMate;
+		}
 		switchTurn(); // switch the turn
 		return checkRes; // return the code
 	}
@@ -105,6 +86,59 @@ char GameBoard::execMove(Coord src, Coord dst)
 	switchTurn();
 	return Legal; // all the checks have been made so only code is 0
 }
+
+
+bool GameBoard::isCheckMate()
+{
+
+	Coord wantedKingCoord = getKing(alternativeTurn(this->_turn)); // get the coord of the opponent king
+
+	
+
+
+	// get all the possible king moves
+	Coord possibleKingMoves[MAX_KING_MOVES]; // init an empty Coord array
+
+	for (int i = 0; i < MAX_KING_MOVES; i++)
+	{
+		Coord currDst = Piece::calcDst(wantedKingCoord, 1, (Direction)i); // get the cuurent destination coord of the king
+		possibleKingMoves[i] = currDst; // add the current destination coord to the array
+	}
+
+
+
+	// iterate through the king moves
+	for (int i = 0; i < MAX_KING_MOVES; i++)
+	{
+		Coord currentMoveCoord = possibleKingMoves[i]; // get the current move
+		if (!currentMoveCoord.isValid()) // current move coord is not legal
+		{
+			continue; // ignore
+		}
+
+		GameBoard simulatedBoard = getCopyOfBoard(); // get a new copy of the current board
+		simulatedBoard.switchTurn(); // switch the current turn to be the opponent's turn
+
+		if (simulatedBoard.isExist(currentMoveCoord) && simulatedBoard.isPieceTurn(currentMoveCoord)) // dst coord is own player piece 
+		{
+			continue; // ignore
+		}
+
+		simulatedBoard.move(wantedKingCoord, currentMoveCoord); // simulate the move on the board
+
+		if (!simulatedBoard.isPlayerKingInDanger()) // if the king is not in check in his new position
+		{
+			return false; // the king is not in check meaning there is a space he can go to
+		}
+
+	}
+
+	// we got here meaning the loop went through and all the spaces the king moved to were checks
+	return true; 
+
+
+}
+
 
 Color GameBoard::getTurn()
 {
