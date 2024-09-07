@@ -1,0 +1,4 @@
+1. Open chessGraphics.exe
+2. Open ChessCode/ChessCode.sln
+3. Run Source.cpp
+4. Play Chess on the GUI
